@@ -1,15 +1,30 @@
 import java.io.IOException;
+import java.util.List;
 
-class Program {
+public class Main {
     public static void main(String[] args) {
-        WikiSearch wikiSearch = new WikiSearch();
-        wikiSearch.getRequest();
+        ConsoleInputOutput consoleIO = new ConsoleInputOutput();
+        WikipediaAPI wikiApi = new WikipediaAPI();
+        UrlParser urlParser = new UrlParser();
+        String encodedRequest = consoleIO.getRequest();
 
         try {
-            wikiSearch.makeServerRequest();
-            wikiSearch.showPage();
+            List<WikiPage> results = wikiApi.makeServerRequest(encodedRequest);
+            if (!results.isEmpty()) {
+                consoleIO.displayResults(results);
+
+                int selectedIndex = consoleIO.getUserSelection(results.size());
+                if (selectedIndex >= 0 && selectedIndex < results.size()) {
+                    int selectedPageId = results.get(selectedIndex).getPageId();
+                    urlParser.showPage(selectedPageId);
+                } else {
+                    consoleIO.displayMessage("Невалидный выбор.");
+                }
+            } else {
+                consoleIO.displayMessage("Нет результатов для поиска.");
+            }
         } catch (IOException e) {
-            System.err.println("Ошибка при выполнении запроса: " + e.getMessage());
+            consoleIO.displayMessage("Произошла ошибка при выполнении запроса: " + e.getMessage());
         }
     }
 }
