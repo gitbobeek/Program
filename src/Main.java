@@ -18,7 +18,7 @@ public class Main {
                     int selectedPageId = results.get(selectedIndex).getPageId();
                     urlParser.showPage(selectedPageId);
                 } else {
-                    consoleIO.displayMessage("Невалидный выбор.");
+                    consoleIO.displayMessage("Неверный выбор статьи.");
                 }
             } else {
                 consoleIO.displayMessage("Нет результатов для поиска.");
